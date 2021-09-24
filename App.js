@@ -18,7 +18,7 @@ export default function App() {
           name="Login"
           component={Login}
           options={{
-            headerTintColor: "#F92E6A",
+            headerShown: false,
             title: "Login",
           }}
         />
@@ -26,11 +26,19 @@ export default function App() {
           name="NewUser"
           component={NewUser}
           options={{
-            headerTintColor: "#F92E6A",
+            headerShown: false,
             title: "Novo Usuario",
           }}
         />
-
+        <Stack.Screen
+          name="Task"
+          component={Task}
+          options={{
+            headerTintColor: "#F92E6A",
+            title: "Tarefas",
+            headerLeft: null,
+          }}
+        />
         <Stack.Screen
           name="New Task"
           component={NewTask}

@@ -12,20 +12,42 @@ import firebase from "../../config/firebase.js";
 import styles from "../Login/style.js";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-export default function Login({ nativation }) {
+export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
-  const [senha, setSenha] = useState("");
+  const [password, setPassword] = useState("");
   const [errorLogin, setErrorLogin] = useState("");
 
-  const loginFirebase = () => {};
+  const loginFirebase = () => {
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(email, password)
+      .then((userCredential) => {
+        // Signed in
+        let user = userCredential.user;
+        navigation.navigate("Task", { idUser: user.uid });
 
-  useEffect(() => {}, []);
+        // ...
+      })
+      .catch((error) => {
+        setErrorLogin(true);
+        let errorCode = error.code;
+        let errorMessage = error.message;
+      });
+  };
+
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        navigation.navigate("Task", { idUser: user.uid });
+      }
+    });
+  }, []);
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
     >
-      <Text style={styles.title}>Gerenciador de Tasks</Text>
+      <Text style={styles.title}>Atarefado</Text>
 
       <TextInput
         style={styles.input}
@@ -40,8 +62,8 @@ export default function Login({ nativation }) {
         placeholder="Digite sua senha"
         secureTextEntry={true}
         type="Text"
-        onChangeText={(text) => setSenha(text)}
-        value={senha}
+        onChangeText={(text) => setPassword(text)}
+        value={password}
       ></TextInput>
       {errorLogin === true ? (
         <View style={styles.contentAlert}>
@@ -55,12 +77,16 @@ export default function Login({ nativation }) {
       ) : (
         <View />
       )}
-      {email === "" || senha === "" ? (
+      {email === "" || password === "" ? (
         <TouchableOpacity disabled={true} style={styles.buttonLogin}>
           <Text style={styles.textButtonLogin}>Login</Text>
         </TouchableOpacity>
       ) : (
-        <TouchableOpacity disabled={true} style={styles.buttonLogin}>
+        <TouchableOpacity
+          disabled={false}
+          style={styles.buttonLogin}
+          onPress={loginFirebase}
+        >
           <Text style={styles.textButtonLogin}>Login</Text>
         </TouchableOpacity>
       )}
@@ -68,10 +94,12 @@ export default function Login({ nativation }) {
         Você ainda não é registrado?
         <Text
           style={styles.linkSubscribe}
-          onPress={() => nativation.navigate("NewUser")}
-        >Registrar agora...</Text>
+          onPress={() => navigation.navigate("NewUser")}
+        >
+          Registrar agora...
+        </Text>
       </Text>
-      <View style = {{height: 100}}/>
+      <View style={{ height: 100 }} />
     </KeyboardAvoidingView>
   );
 }
