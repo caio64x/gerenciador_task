@@ -5,12 +5,12 @@ import {
   TouchableOpacity,
   FlatList,
 } from "react-native";
-import database from "../../config/firebase.js";
+import firebase from "../../config/firebase.js";
 import { FontAwesome } from "@expo/vector-icons";
 import styles from "../Task/style.js";
 export default function Task({ navigation }) {
   const [task, setTask] = useState([]);
-
+  const database = firebase.firestore()
   function deleteTask(id) {
     database.collection("Tasks").doc(id).delete();
   }
