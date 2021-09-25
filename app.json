@@ -26,6 +26,7 @@
       },
       "package": "com.ribeirinho64x.gerenciadortask"
     },
-    "description": ""
+    "description": "gerenciador de tarefas com firebase feito em react native",
+    "githubUrl": "https://github.com/caio64x/gerenciador_task"
   }
 }
